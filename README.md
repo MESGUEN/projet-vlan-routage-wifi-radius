@@ -3,7 +3,7 @@ This project involves designing and configuring a complete network infrastructur
 
 The network is segmented into three VLANs:
 
-- VLAN 10 – Sale Departement: for standard users, with the SSID : sale and the key : key_sale.
+- VLAN 10 – Sale : for standard users, with the SSID : sale and the key : key_sale.
 
 - VLAN 20 – Direction : for executives, with the SSID : pa-direction and RADIUS with authentication.
 
