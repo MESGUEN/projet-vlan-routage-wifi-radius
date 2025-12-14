@@ -1,0 +1,180 @@
+
+!
+! Last configuration change at 11:14:19 UTC Tue Mar 2 1993 by admin
+version 15.3
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname ap
+!
+!
+logging rate-limit console 9
+enable secret 5 $1$XdoR$Ib9sYT.eWhHh8sP4uQ1Iv.
+!
+aaa new-model
+!
+!
+aaa group server radius RAD_GRP
+ server 192.168.200.4 auth-port 1812 acct-port 1813
+!
+aaa authentication login local-method local
+aaa authentication login EAP_MTD group RAD_GRP
+!
+!
+!
+!
+!
+aaa session-id common
+no ip source-route
+no ip cef
+ip domain name ap.lan
+!
+!
+!
+!
+dot11 pause-time 100
+dot11 syslog
+!
+dot11 ssid pa-direction
+   vlan 20
+   authentication open eap EAP_MTD 
+   authentication network-eap EAP_MTD 
+   authentication key-management wpa version 2
+   mbssid guest-mode
+!
+dot11 ssid sale
+   vlan 10
+   authentication open 
+   authentication key-management wpa version 2
+   mbssid guest-mode
+   wpa-psk ascii 7 0118031D6418070324
+!
+!
+!
+no ipv6 cef
+!
+!
+username Cisco password 7 0802455D0A16
+username admin privilege 15 secret 5 $1$JQLP$QR/9E4IflwrHgehXgPfC/1
+!
+!
+bridge irb
+!
+!
+!
+interface Dot11Radio0
+ no ip address
+ !
+ encryption vlan 10 mode ciphers aes-ccm 
+ !
+ encryption vlan 100 mode ciphers aes-ccm 
+ !
+ encryption vlan 20 mode ciphers aes-ccm 
+ !
+ ssid pa-direction
+ !
+ ssid sale
+ !
+ antenna gain 0
+ stbc
+ mbssid
+ station-role root
+ bridge-group 1
+ bridge-group 1 subscriber-loop-control
+ bridge-group 1 spanning-disabled
+ bridge-group 1 block-unknown-source
+ no bridge-group 1 source-learning
+ no bridge-group 1 unicast-flooding
+!
+interface Dot11Radio0.10
+ encapsulation dot1Q 10
+ bridge-group 10
+ bridge-group 10 subscriber-loop-control
+ bridge-group 10 spanning-disabled
+ bridge-group 10 block-unknown-source
+ no bridge-group 10 source-learning
+ no bridge-group 10 unicast-flooding
+!
+interface Dot11Radio0.20
+ encapsulation dot1Q 20
+ bridge-group 20
+ bridge-group 20 subscriber-loop-control
+ bridge-group 20 spanning-disabled
+ bridge-group 20 block-unknown-source
+ no bridge-group 20 source-learning
+ no bridge-group 20 unicast-flooding
+!
+interface Dot11Radio1
+ no ip address
+ shutdown
+ antenna gain 0
+ peakdetect
+ no dfs band block
+ channel dfs
+ station-role root
+ bridge-group 1
+ bridge-group 1 subscriber-loop-control
+ bridge-group 1 spanning-disabled
+ bridge-group 1 block-unknown-source
+ no bridge-group 1 source-learning
+ no bridge-group 1 unicast-flooding
+!
+interface GigabitEthernet0
+ no ip address
+ duplex auto
+ speed auto
+ bridge-group 1
+ bridge-group 1 spanning-disabled
+ no bridge-group 1 source-learning
+!
+interface GigabitEthernet0.10
+ encapsulation dot1Q 10
+ bridge-group 10
+ bridge-group 10 spanning-disabled
+ no bridge-group 10 source-learning
+!
+interface GigabitEthernet0.20
+ encapsulation dot1Q 20
+ bridge-group 20
+ bridge-group 20 spanning-disabled
+ no bridge-group 20 source-learning
+!
+interface GigabitEthernet1
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+ bridge-group 1
+ bridge-group 1 spanning-disabled
+ no bridge-group 1 source-learning
+!
+interface BVI1
+ mac-address 5897.bdf3.0c88
+ ip address 192.168.200.3 255.255.255.0
+ ipv6 address dhcp
+ ipv6 address autoconfig
+ ipv6 enable
+!
+ip forward-protocol nd
+ip http server
+ip http authentication local
+no ip http secure-server
+ip http help-path http://www.cisco.com/warp/public/779/smbiz/prodconfig/help/eag
+ip ssh version 2
+!
+!
+radius-server host 192.168.200.4 auth-port 1812 acct-port 1813 key 7 045604081C244F5C0C0D
+!
+bridge 1 route ip
+!
+!
+!
+line con 0
+ login authentication local-method
+line vty 0 4
+ login authentication local-method
+ transport input ssh
+!
+end

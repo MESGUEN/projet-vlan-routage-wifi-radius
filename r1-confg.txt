@@ -1,0 +1,110 @@
+
+!
+version 12.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname R1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+no aaa new-model
+ip cef
+!
+!
+no ip dhcp use vrf connected
+ip dhcp excluded-address 192.168.10.1 192.168.10.99
+ip dhcp excluded-address 192.168.20.1 192.168.20.99
+!
+ip dhcp pool DHCP-VLAN10
+   network 192.168.10.0 255.255.255.0
+   default-router 192.168.10.1 
+   dns-server 8.8.8.8 
+!
+ip dhcp pool DHCP-VLAN20
+   network 192.168.20.0 255.255.255.0
+   dns-server 8.8.8.8 
+   default-router 192.168.20.1 
+!
+!
+ip domain name r1.lan
+ip name-server 8.8.8.8
+ip ssh version 2
+!
+!
+username admin privilege 15 secret 5 $1$uLre$paEsbl5myXo.zwstwkQ4n1
+!
+!
+!
+interface FastEthernet0/0
+ ip address dhcp
+ ip access-group 130 in
+ ip nat outside
+ duplex auto
+ speed auto
+!
+interface FastEthernet0/1
+ no ip address
+ duplex auto
+ speed auto
+!
+interface FastEthernet0/1.10
+ encapsulation dot1Q 10
+ ip address 192.168.10.1 255.255.255.0
+ ip access-group 110 in
+ ip nat inside
+!
+interface FastEthernet0/1.20
+ encapsulation dot1Q 20
+ ip address 192.168.20.1 255.255.255.0
+ ip access-group 120 in
+ ip nat inside
+!
+interface FastEthernet0/1.200
+ encapsulation dot1Q 200
+ ip address 192.168.200.1 255.255.255.0
+ ip nat inside
+!
+interface Serial0/0/0
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+ip route 0.0.0.0 0.0.0.0 192.168.0.1
+!
+!
+no ip http server
+no ip http secure-server
+ip nat inside source list 100 interface FastEthernet0/0 overload
+!
+access-list 100 permit ip any any
+access-list 110 permit icmp 192.168.10.0 0.0.0.255 192.168.200.0 0.0.0.255 echo-reply
+access-list 110 permit tcp 192.168.10.0 0.0.0.255 192.168.200.0 0.0.0.255 established
+access-list 110 deny   ip 192.168.10.0 0.0.0.255 192.168.200.0 0.0.0.255
+access-list 110 deny   ip 192.168.10.0 0.0.0.255 192.168.20.0 0.0.0.255
+access-list 110 permit ip any any
+access-list 120 permit icmp 192.168.20.0 0.0.0.255 192.168.200.0 0.0.0.255 echo-reply
+access-list 120 permit tcp 192.168.20.0 0.0.0.255 192.168.200.0 0.0.0.255 established
+access-list 120 deny   ip 192.168.20.0 0.0.0.255 192.168.200.0 0.0.0.255
+access-list 120 deny   ip 192.168.20.0 0.0.0.255 192.168.10.0 0.0.0.255
+access-list 120 permit ip any any
+access-list 130 deny   icmp any any echo
+access-list 130 permit ip any any
+!
+!
+!
+control-plane
+!
+!
+!
+line con 0
+line aux 0
+line vty 0 4
+ login local
+ transport input ssh
+!
+scheduler allocate 20000 1000
+end
