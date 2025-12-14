@@ -3,17 +3,28 @@ This project involves designing and configuring a complete network infrastructur
 
 The network is segmented into three VLANs:
 
-- VLAN 10 – Staff Room: for standard users, with the SSID sale and the key key_sale.
+- VLAN 10 – Sale Departement: for standard users, with the SSID : sale and the key : key_sale.
 
-- VLAN 20 – Management: for executives, with the SSID pa-direction and RADIUS authentication.
+- VLAN 20 – Direction : for executives, with the SSID : pa-direction and RADIUS with authentication.
 
-- VLAN 200 – Administration: reserved for network administration and infrastructure devices.
+- VLAN 200 – Management : reserved for network administration and infrastructure devices.
 
 The R1 router provides inter-VLAN routing and hosts the DHCP service. The S1 switch, configured as a trunk link to R1, handles VLAN assignment across switch ports.
 The Wi-Fi access point, configured in bridge mode, allows wireless clients to connect to the appropriate VLANs.
 Finally, a RADIUS server secures access for management users through centralized authentication.
 
 This architecture delivers clear service separation, improved security, and simplified local network administration.
+
+Hardware list : 
+
+Router (R1) : Cisco1841
+Switch (S1) : WS-C2950T-24
+Wireless Access Point (AP) : AIR-CAP2702E-E-K9
+
+**“Autonomous AP IOS Software” mode (without Wi-Fi controllers).
+Firmware version: `ap3g2-k9w7-tar.153-3.JF10.tar`**
+
+
 
 
 ![Schéma réseau](Diagramme%20TP-Wifi.jpg)
