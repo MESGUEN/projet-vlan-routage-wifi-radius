@@ -30,5 +30,4 @@ Autonomous AP IOS Software” mode (without Wi-Fi controllers).
 
 ![Schéma réseau](Diagramme%20TP-Wifi.jpg)
 
-```bash
-ping 8.8.8.8
+![Equipment](Equipment.jpg)
